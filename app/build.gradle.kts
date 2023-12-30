@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
 }
 
@@ -76,4 +77,10 @@ dependencies {
     val hiltVersion = "2.50"
     implementation("com.google.dagger:hilt-android:$hiltVersion")
     ksp("com.google.dagger:hilt-android-compiler:$hiltVersion")
+
+    // Retrofit : A type-safe HTTP client for Android and Java.
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+
+    // Navigation Compose Hilt Integration : Navigation Compose Hilt Integration
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0-alpha01")
 }

@@ -1,12 +1,12 @@
-package com.github.theapache64.monolytics.screen.game
+package com.github.theapache64.monolytics.screen.result
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-fun GameScreen(
+fun ResultScreen(
     modifier: Modifier = Modifier,
-    onGameFinished : () -> Unit,
+    onResultSubmitted : () -> Unit,
 ) {
 
 }
