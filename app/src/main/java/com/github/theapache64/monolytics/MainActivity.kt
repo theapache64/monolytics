@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun Main(){
-        var screen by remember { mutableStateOf<Screen>(Screen.Onboarding) }
+        var screen by remember { mutableStateOf<Screen>(Screen.Game(listOf("Gayatri", "Ravi", "Shifar"))) }
         when(screen){
             Screen.Onboarding -> OnboardingScreen(
                 onOnboardingFinished = { names ->
