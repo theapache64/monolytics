@@ -4,6 +4,6 @@ import androidx.compose.runtime.State
 
 data class Player(
     val name : String,
-    var currentTime : State<Long>,
+    var currentTime : Long,
     val totalTime : MutableList<Long>
 )

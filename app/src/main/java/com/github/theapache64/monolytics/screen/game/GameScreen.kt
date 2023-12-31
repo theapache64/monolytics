@@ -52,7 +52,7 @@ fun GameScreen(
 @Composable
 fun CurrentPlayerUi(
     currentPlayer: Player,
-    modifier : Modifier = Modifier,
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
@@ -63,12 +63,16 @@ fun CurrentPlayerUi(
 
         Row {
             // Current time
-            Text(text = currentPlayer.currentTime.value.formatToMinuteSecond())
+            Text(text = currentPlayer.currentTime.formatToMinuteSecond())
         }
     }
 }
 
-// To convert millisecond to minutes:seconds format
+// To convert millisecond to 00:00 format
 private fun Long.formatToMinuteSecond(): String {
-    return "${this / 1000 / 60}:${this / 1000 % 60}"
+    return String.format(
+        "%02d:%02d",
+        this / 1000 / 60,
+        this / 1000 % 60
+    )
 }
