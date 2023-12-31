@@ -8,6 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.theapache64.monolytics.data.TimeRepo
+import com.github.theapache64.monolytics.data.model.AddMonolyticsRequest
 import com.github.theapache64.monolytics.data.model.Player
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -17,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GameViewModel @Inject constructor(
-    // private val timeRepo: TimeRepo
+    private val timeRepo: TimeRepo
 ) : ViewModel() {
 
     var currentPlayer by mutableStateOf<Player?>(null)
@@ -56,6 +57,21 @@ class GameViewModel @Inject constructor(
         // save previous players time
         val previousPlayer = players[currentPlayerIndex]
         previousPlayer.totalTime.add(previousPlayer.currentTime.value)
+
+        val addMonolyticsRequest = AddMonolyticsRequest(
+            name = previousPlayer.name,
+            currentTime = previousPlayer.currentTime.value.toString(),
+            totalTime = previousPlayer.totalTime.sum().toString(),
+            amIBad = "true" // TODO: change to boolean
+        )
+
+        // sync data
+        viewModelScope.launch {
+            timeRepo.addMonolytics(
+                addMonolyticsRequest = addMonolyticsRequest
+            )
+        }
+
 
         // reset previous player time
         previousPlayer.currentTime.value = 0L

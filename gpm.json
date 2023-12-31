@@ -27,6 +27,34 @@
     "name": "Navigation Compose Hilt Integration",
     "description": "Navigation Compose Hilt Integration"
    }
+  },
+  {
+   "id": 3,
+   "type": "implementation",
+   "installed_name": "moshi",
+   "gpm_dep": {
+    "artifact_id": "moshi",
+    "default_type": "implementation",
+    "docs": "https://mvnrepository.com/artifact/com.squareup.moshi/moshi",
+    "get_from": "Central",
+    "group_id": "com.squareup.moshi",
+    "name": "Moshi",
+    "description": "A modern JSON API for Android and Java"
+   }
+  },
+  {
+   "id": 4,
+   "type": "implementation",
+   "installed_name": "moshi",
+   "gpm_dep": {
+    "artifact_id": "converter-moshi",
+    "default_type": "implementation",
+    "docs": "https://mvnrepository.com/artifact/com.squareup.retrofit2/converter-moshi",
+    "get_from": "Central",
+    "group_id": "com.squareup.retrofit2",
+    "name": "Converter: Moshi",
+    "description": "A Retrofit Converter which uses Moshi for serialization."
+   }
   }
  ]
 }

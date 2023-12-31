@@ -83,4 +83,13 @@ dependencies {
 
     // Navigation Compose Hilt Integration : Navigation Compose Hilt Integration
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0-alpha01")
+
+    implementation("com.github.theapache64:retrosheet:2.0.1")
+
+    // Moshi : A modern JSON API for Android and Java
+    implementation("com.squareup.moshi:moshi:1.15.0")
+    ksp("com.squareup.moshi:moshi-kotlin-codegen:1.15.0")
+
+    // Converter: Moshi : A Retrofit Converter which uses Moshi for serialization.
+    implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
 }
