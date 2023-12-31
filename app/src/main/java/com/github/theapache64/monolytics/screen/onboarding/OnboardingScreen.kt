@@ -9,8 +9,7 @@ import com.github.theapache64.monolytics.composable.CommaInputUi
 
 @Composable
 fun OnboardingScreen(
-    viewModel: OnboardingViewModel = hiltViewModel(),
-    onOnboardingFinished: () -> Unit,
+    onOnboardingFinished: (names : List<String>) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -20,8 +19,7 @@ fun OnboardingScreen(
         CommaInputUi(
             actionTitle = "START GAME 🚀",
             onInputSubmitted = { names ->
-                viewModel.startGame(names)
-                onOnboardingFinished()
+                onOnboardingFinished(names)
             }
         )
     }
