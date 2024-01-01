@@ -82,6 +82,14 @@ fun GameScreen(
                     textToSpeech.speak(it, TextToSpeech.QUEUE_ADD, null, null)
                 }
             }
+
+            viewModel.attention?.let {
+                Text(text = "👀 $it", fontSize = 20.sp)
+
+                LaunchedEffect(it) {
+                    textToSpeech.speak(it, TextToSpeech.QUEUE_ADD, null, null)
+                }
+            }
         }
 
         viewModel.currentPlayer?.let { currentPlayer ->

@@ -33,6 +33,9 @@ class GameViewModel @Inject constructor(
     var fastestPlayer by mutableStateOf<String?>(null)
         private set
 
+    var attention by mutableStateOf<String?>(null)
+        private set
+
     private var players = mutableListOf<Player>()
 
     fun init(names: List<String>) {
@@ -66,6 +69,14 @@ class GameViewModel @Inject constructor(
 
                     slowestPlayer = "Slowest Player is ${slowest?.name}"
                     fastestPlayer = "Fastest Player is ${fastest?.name}"
+                }
+
+                val isCurrentPlayerTakingMoreThanAMinuteToPlay = (currentPlayer?.currentTime?.value ?: 0L) > 60000L
+                val minutes = (currentPlayer?.currentTime?.value ?: 0L) / 1000 / 60
+                attention = if(isCurrentPlayerTakingMoreThanAMinuteToPlay){
+                    "Attention ${currentPlayer?.name}, You're taking too much time to play! ($minutes minutes)"
+                }else{
+                    null
                 }
             }
         }
