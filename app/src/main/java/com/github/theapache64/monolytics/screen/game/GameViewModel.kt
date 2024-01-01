@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.github.theapache64.monolytics.data.TimeRepo
 import com.github.theapache64.monolytics.data.model.AddMonolyticsRequest
 import com.github.theapache64.monolytics.data.model.Player
+import com.github.theapache64.monolytics.utils.TimeUtils.formatToMinuteSecond
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -54,15 +55,20 @@ class GameViewModel @Inject constructor(
         val nextPlayerIndex = (currentPlayerIndex + 1) % players.size
         currentPlayer = players[nextPlayerIndex]
 
+
         // save previous players time
         val previousPlayer = players[currentPlayerIndex]
-        previousPlayer.totalTime.add(previousPlayer.currentTime.value)
+        val timeTook = previousPlayer.currentTime.value
+        previousPlayer.totalTime.add(timeTook)
 
+        val totalTimeTook = previousPlayer.totalTime.sum()
         val addMonolyticsRequest = AddMonolyticsRequest(
             name = previousPlayer.name,
-            currentTime = previousPlayer.currentTime.value.toString(),
-            totalTime = previousPlayer.totalTime.sum().toString(),
-            amIBad = "true" // TODO: change to boolean
+            timeTook = timeTook.formatToMinuteSecond(),
+            timeTookMs = timeTook.toString(),
+            totalTimeTook = totalTimeTook.formatToMinuteSecond(),
+            totalTimeTookMs = totalTimeTook.toString(),
+            amIBad = "-" // TODO: change to boolean
         )
 
         // sync data
@@ -81,3 +87,5 @@ class GameViewModel @Inject constructor(
 
     }
 }
+
+

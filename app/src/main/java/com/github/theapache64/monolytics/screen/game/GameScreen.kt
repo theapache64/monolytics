@@ -3,6 +3,7 @@ package com.github.theapache64.monolytics.screen.game
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.pm.ActivityInfo
+import android.speech.tts.TextToSpeech
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +15,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -21,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.theapache64.monolytics.data.model.Player
+import com.github.theapache64.monolytics.utils.TimeUtils.formatToMinuteSecond
 
 @SuppressLint("SourceLockedOrientationActivity")
 @Composable
@@ -58,6 +62,20 @@ fun CurrentPlayerUi(
     currentPlayer: Player,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
+    val textToSpeech = remember { TextToSpeech(context){} }
+    LaunchedEffect(currentPlayer.name) {
+        textToSpeech.speak(currentPlayer.name, TextToSpeech.QUEUE_FLUSH, null, null)
+    }
+
+    // free TTS resources
+    DisposableEffect(textToSpeech){
+        onDispose {
+            textToSpeech.stop()
+            textToSpeech.shutdown()
+        }
+    }
+
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -73,24 +91,19 @@ fun CurrentPlayerUi(
             Text(text = currentPlayer.currentTime.value.formatToMinuteSecond(), fontSize = 30.sp)
 
             // Total time
-            Text(text = "(${(currentPlayer.currentTime.value  + currentPlayer.totalTime.sum()).formatToMinuteSecond()})", fontSize = 25.sp)
+            Text(
+                text = "(${(currentPlayer.currentTime.value + currentPlayer.totalTime.sum()).formatToMinuteSecond()})",
+                fontSize = 25.sp
+            )
         }
 
         Button(
             onClick = {
 
             },
+            modifier = Modifier.padding(top = 20.dp)
         ) {
             Text(text = "END GAME")
         }
     }
-}
-
-// To convert millisecond to 00:00 format
-private fun Long.formatToMinuteSecond(): String {
-    return String.format(
-        "%02d:%02d",
-        this / 1000 / 60,
-        this / 1000 % 60
-    )
 }

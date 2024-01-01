@@ -29,7 +29,7 @@ class NetworkModule {
     fun provideOkHttpClient(): OkHttpClient {
         val retrosheetInterceptor = RetrosheetInterceptor.Builder()
             .setLogging(true)
-            .addSheet("monolytics", "created_at", "name", "current_time", "total_time", "am_i_bad")
+            .addSheet("monolytics", "created_at", "name", "time_took_ms", "total_time_took_ms", "time_took", "total_time_took", "am_i_bad")
             .addForm("add_monolytics", "https://docs.google.com/forms/d/e/1FAIpQLSebErCHL-jWsx5DWbpRw1Ff_HL0wpqtvzTQrC9KyqbEG9nAhg/viewform?usp=sf_link")
             .build()
 
