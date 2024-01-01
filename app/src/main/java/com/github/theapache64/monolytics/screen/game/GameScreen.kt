@@ -36,13 +36,20 @@ fun GameScreen(
 ) {
     // Change the orientation to landscape and back to portrait
     val activity = LocalContext.current as Activity
+    val textToSpeech = remember { TextToSpeech(activity) {} }
     DisposableEffect(Unit) {
         // change activity orientation
         viewModel.init(names)
+
         activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+
         onDispose {
             // reset activity orientation to portrait
             activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
+            // free TTS resources
+            textToSpeech.stop()
+            textToSpeech.shutdown()
         }
     }
 
@@ -51,8 +58,30 @@ fun GameScreen(
         .clickable { viewModel.onScreenClicked() }
     ) {
 
+        // Top Right Stats
         viewModel.stats?.let {
-            Text(text = it, modifier = Modifier.align(Alignment.TopEnd))
+            Text(text = it, modifier = Modifier.align(Alignment.TopEnd), fontSize = 30.sp, lineHeight = 40.sp)
+        }
+
+        // Top Left Stats
+        Column(
+            modifier = Modifier.align(Alignment.TopStart)
+        ) {
+            viewModel.slowestPlayer?.let {
+                Text(text = "🐢 $it", fontSize = 30.sp)
+
+                LaunchedEffect(it) {
+                    textToSpeech.speak(it, TextToSpeech.QUEUE_ADD, null, null)
+                }
+            }
+
+            viewModel.fastestPlayer?.let {
+                Text(text = "🐰 $it", fontSize = 30.sp)
+
+                LaunchedEffect(it) {
+                    textToSpeech.speak(it, TextToSpeech.QUEUE_ADD, null, null)
+                }
+            }
         }
 
         viewModel.currentPlayer?.let { currentPlayer ->

@@ -27,6 +27,12 @@ class GameViewModel @Inject constructor(
     var stats by mutableStateOf<String?>(null)
         private set
 
+    var slowestPlayer by mutableStateOf<String?>(null)
+        private set
+
+    var fastestPlayer by mutableStateOf<String?>(null)
+        private set
+
     private var players = mutableListOf<Player>()
 
     fun init(names: List<String>) {
@@ -48,8 +54,19 @@ class GameViewModel @Inject constructor(
                 currentPlayer?.currentTime?.value =
                     currentPlayer?.currentTime?.value?.plus(1000) ?: 0L
                 delay(1000L)
-                stats =
-                    players.joinToString("\n") { "${it.name} : ${(it.currentTime.value + it.totalTime.sum()).formatToMinuteSecond()}" }
+                val playerStats =
+                    players.joinToString("\n") { "👷‍♂️ ${it.name} : ${(it.currentTime.value + it.totalTime.sum()).formatToMinuteSecond()}" }
+                stats = playerStats
+
+                // more detailed stats
+                val isEveryOnePlayedAtLeastOneRound = players.all { it.totalTime.isNotEmpty() }
+                if(isEveryOnePlayedAtLeastOneRound){
+                    val slowest = players.maxByOrNull { it.currentTime.value + it.totalTime.sum() }
+                    val fastest = players.minByOrNull { it.currentTime.value + it.totalTime.sum() }
+
+                    slowestPlayer = "Slowest Player is ${slowest?.name}"
+                    fastestPlayer = "Fastest Player is ${fastest?.name}"
+                }
             }
         }
     }
@@ -70,7 +87,7 @@ class GameViewModel @Inject constructor(
         val totalTimeTook = previousPlayer.totalTime.sum()
         val addMonolyticsRequest = AddMonolyticsRequest(
             name = previousPlayer.name,
-            timeTook = timeTook.formatToMinuteSecond() ,
+            timeTook = timeTook.formatToMinuteSecond(),
             timeTookMs = timeTook.toString(),
             totalTimeTook = totalTimeTook.formatToMinuteSecond(),
             totalTimeTookMs = totalTimeTook.toString(),
