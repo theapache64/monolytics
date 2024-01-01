@@ -51,6 +51,10 @@ fun GameScreen(
         .clickable { viewModel.onScreenClicked() }
     ) {
 
+        viewModel.stats?.let {
+            Text(text = it, modifier = Modifier.align(Alignment.TopEnd))
+        }
+
         viewModel.currentPlayer?.let { currentPlayer ->
             CurrentPlayerUi(currentPlayer, modifier = Modifier.align(Alignment.Center))
         }
@@ -63,13 +67,13 @@ fun CurrentPlayerUi(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val textToSpeech = remember { TextToSpeech(context){} }
+    val textToSpeech = remember { TextToSpeech(context) {} }
     LaunchedEffect(currentPlayer.name) {
         textToSpeech.speak(currentPlayer.name, TextToSpeech.QUEUE_FLUSH, null, null)
     }
 
     // free TTS resources
-    DisposableEffect(textToSpeech){
+    DisposableEffect(textToSpeech) {
         onDispose {
             textToSpeech.stop()
             textToSpeech.shutdown()

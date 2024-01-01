@@ -2,7 +2,6 @@ package com.github.theapache64.monolytics.screen.game
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -19,10 +18,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GameViewModel @Inject constructor(
-    private val timeRepo: TimeRepo
+    private val timeRepo: TimeRepo,
 ) : ViewModel() {
 
     var currentPlayer by mutableStateOf<Player?>(null)
+        private set
+
+    var stats by mutableStateOf<String?>(null)
         private set
 
     private var players = mutableListOf<Player>()
@@ -43,8 +45,11 @@ class GameViewModel @Inject constructor(
     private fun startTimer() {
         viewModelScope.launch {
             while (true) {
-                currentPlayer?.currentTime?.value = currentPlayer?.currentTime?.value?.plus(1000) ?: 0L
+                currentPlayer?.currentTime?.value =
+                    currentPlayer?.currentTime?.value?.plus(1000) ?: 0L
                 delay(1000L)
+                stats =
+                    players.joinToString("\n") { "${it.name} : ${(it.currentTime.value + it.totalTime.sum()).formatToMinuteSecond()}" }
             }
         }
     }
@@ -58,13 +63,14 @@ class GameViewModel @Inject constructor(
 
         // save previous players time
         val previousPlayer = players[currentPlayerIndex]
-        val timeTook = previousPlayer.currentTime.value
+        var timeTook = previousPlayer.currentTime.value
         previousPlayer.totalTime.add(timeTook)
 
+        // send data to server
         val totalTimeTook = previousPlayer.totalTime.sum()
         val addMonolyticsRequest = AddMonolyticsRequest(
             name = previousPlayer.name,
-            timeTook = timeTook.formatToMinuteSecond(),
+            timeTook = timeTook.formatToMinuteSecond() ,
             timeTookMs = timeTook.toString(),
             totalTimeTook = totalTimeTook.formatToMinuteSecond(),
             totalTimeTookMs = totalTimeTook.toString(),
@@ -87,5 +93,4 @@ class GameViewModel @Inject constructor(
 
     }
 }
-
 
