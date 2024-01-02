@@ -60,7 +60,12 @@ fun GameScreen(
 
         // Top Right Stats
         viewModel.stats?.let {
-            Text(text = it, modifier = Modifier.align(Alignment.TopEnd), fontSize = 30.sp, lineHeight = 40.sp)
+            Text(
+                text = it,
+                modifier = Modifier.align(Alignment.TopEnd),
+                fontSize = 30.sp,
+                lineHeight = 40.sp
+            )
         }
 
         // Top Left Stats
@@ -140,7 +145,6 @@ fun CurrentPlayerUi(
 
         Button(
             onClick = {
-
             },
             modifier = Modifier.padding(top = 20.dp)
         ) {

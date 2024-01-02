@@ -61,7 +61,21 @@ class GameViewModel @Inject constructor(
                     players.joinToString("\n") { "👷‍♂️ ${it.name} : ${(it.currentTime.value + it.totalTime.sum()).formatToMinuteSecond()}" }
                 stats = playerStats
 
-                // more detailed stats
+                // minute alert
+                val isCurrentPlayerTakingMoreThanAMinuteToPlay = (currentPlayer?.currentTime?.value ?: 0L) > 60000L
+                val minutes = (currentPlayer?.currentTime?.value ?: 0L) / 1000 / 60
+                attention = if(isCurrentPlayerTakingMoreThanAMinuteToPlay){
+                    "Attention ${currentPlayer?.name}, You're taking too much time to play! ($minutes minutes)"
+                }else{
+                    null
+                }
+            }
+        }
+
+        viewModelScope.launch {
+            while(true){
+                delay(60_000L)
+                // slowest and fastest
                 val isEveryOnePlayedAtLeastOneRound = players.all { it.totalTime.isNotEmpty() }
                 if(isEveryOnePlayedAtLeastOneRound){
                     val slowest = players.maxByOrNull { it.currentTime.value + it.totalTime.sum() }
@@ -71,13 +85,6 @@ class GameViewModel @Inject constructor(
                     fastestPlayer = "Fastest Player is ${fastest?.name}"
                 }
 
-                val isCurrentPlayerTakingMoreThanAMinuteToPlay = (currentPlayer?.currentTime?.value ?: 0L) > 60000L
-                val minutes = (currentPlayer?.currentTime?.value ?: 0L) / 1000 / 60
-                attention = if(isCurrentPlayerTakingMoreThanAMinuteToPlay){
-                    "Attention ${currentPlayer?.name}, You're taking too much time to play! ($minutes minutes)"
-                }else{
-                    null
-                }
             }
         }
     }
